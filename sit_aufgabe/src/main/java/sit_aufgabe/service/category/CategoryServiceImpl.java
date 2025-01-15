@@ -17,7 +17,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     @Override
-    public List<Category> getCategories() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
