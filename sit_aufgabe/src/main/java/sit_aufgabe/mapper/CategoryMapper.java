@@ -25,10 +25,9 @@ public class CategoryMapper {
 
     public Category toCategory(UpdateCategoryRequest updateCategoryRequest){
         Category category = new Category();
-        category.setId(category.getId());
+        category.setId(updateCategoryRequest.getId());;
         category.setName(updateCategoryRequest.getName());
         category.setDescription(updateCategoryRequest.getDescription());
-        category.setNumberOfBooks(calculateCategoryCount(category.getId()));
         return category;
     }
 
@@ -47,12 +46,5 @@ public class CategoryMapper {
         return updateCategoryRequest;
     }
 
-    int calculateCategoryCount(Integer id){
-        Optional<Category> category = categoryRepository.findById(id);
-        int count = 0;
-        if (category.isPresent()){
-            count = bookRepository.getBookByCategory(category.get()).size();
-        }
-        return count;
-    }
+
 }

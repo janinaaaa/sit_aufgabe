@@ -29,7 +29,7 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 * 14)) // 14 days
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 
     }

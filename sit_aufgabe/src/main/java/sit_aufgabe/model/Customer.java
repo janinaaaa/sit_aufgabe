@@ -25,7 +25,7 @@ public class Customer implements UserDetails {
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

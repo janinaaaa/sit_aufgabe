@@ -19,30 +19,30 @@ import java.util.Optional;
 @RequestMapping("/book")
 public class BookController {
     private final BookService bookService;
+    @PreAuthorize("permitAll()")
     @GetMapping("/all")
     public ResponseEntity<List<Book>> getAllBooks(){
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Integer id){
         Optional<Book> book = bookService.getBookById(id);
         return book.isPresent() ? ResponseEntity.ok(book.get()) : ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
-    public ResponseEntity<Book> addBook(@Valid @RequestBody AddBookRequest book) {
+    public ResponseEntity<Book> addBook(@RequestBody AddBookRequest book) {
         return new ResponseEntity<>(bookService.addBook(book), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("isAuthenticated()")
+
     @PutMapping("/update")
-    public ResponseEntity<Book> updateBook(@Valid @RequestBody UpdateBookRequest book) {
+    public ResponseEntity<Book> updateBook(@RequestBody UpdateBookRequest book) {
         return ResponseEntity.ok(bookService.updateBook(book));
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete/{id}")
     public void deleteBook(@PathVariable Integer id){
         bookService.deleteBook(id);

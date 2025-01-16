@@ -7,6 +7,7 @@ import sit_aufgabe.dto.UpdateBookRequest;
 import sit_aufgabe.mapper.BookMapper;
 import sit_aufgabe.model.Book;
 import sit_aufgabe.repository.BookRepository;
+import sit_aufgabe.service.category.CategoryService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService{
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryService categoryService;
 
     @Override
     public List<Book> getAllBooks() {
@@ -30,7 +32,9 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book addBook(AddBookRequest addBookRequest) {
         Book book = bookMapper.toBook(addBookRequest);
+        book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
         return bookRepository.save(book);
+
     }
 
     @Override
@@ -42,6 +46,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book updateBook(UpdateBookRequest updatedBook) {
         Book book = bookMapper.toBook(updatedBook);
+        book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
         return bookRepository.save(book);
     }
 }

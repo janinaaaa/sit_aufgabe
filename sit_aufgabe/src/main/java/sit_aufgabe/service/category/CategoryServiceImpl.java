@@ -6,6 +6,7 @@ import sit_aufgabe.dto.AddCategoryRequest;
 import sit_aufgabe.dto.UpdateCategoryRequest;
 import sit_aufgabe.mapper.CategoryMapper;
 import sit_aufgabe.model.Category;
+import sit_aufgabe.repository.BookRepository;
 import sit_aufgabe.repository.CategoryRepository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final BookRepository bookRepository;
     @Override
     public List<Category> getAll() {
         return categoryRepository.findAll();
@@ -29,7 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category addCategory(AddCategoryRequest addCategoryRequest) {
         Category category = categoryMapper.toCategory(addCategoryRequest);
-        return categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+        savedCategory.setNumberOfBooks(calculateCategoryCount(savedCategory.getId()));
+        return categoryRepository.save(savedCategory);
     }
 
     @Override
@@ -41,6 +45,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(UpdateCategoryRequest updateCategoryRequest) {
         Category category = categoryMapper.toCategory(updateCategoryRequest);
+        category.setNumberOfBooks(calculateCategoryCount(category.getId()));
         return categoryRepository.save(category);
+
+    }
+
+    @Override
+    public int calculateCategoryCount(Integer id){
+        Optional<Category> category = categoryRepository.findById(id);
+        int count = 0;
+        if (category.isPresent()){
+            count = bookRepository.getBookByCategory(category.get()).size();
+        }
+        return count;
     }
 }
