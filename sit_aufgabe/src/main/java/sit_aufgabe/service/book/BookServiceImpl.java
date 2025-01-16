@@ -7,6 +7,7 @@ import sit_aufgabe.dto.UpdateBookRequest;
 import sit_aufgabe.mapper.BookMapper;
 import sit_aufgabe.mapper.CategoryMapper;
 import sit_aufgabe.model.Book;
+import sit_aufgabe.model.Category;
 import sit_aufgabe.repository.BookRepository;
 import sit_aufgabe.service.category.CategoryService;
 
@@ -34,9 +35,12 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book addBook(AddBookRequest addBookRequest) {
         Book book = bookMapper.toBook(addBookRequest);
-        book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
-        categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(book.getCategory()));
-        return bookRepository.save(book);
+        Category updateCategory = book.getCategory();
+        Book updateBook = bookRepository.save(book);
+        updateCategory.setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
+        Category category = categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(updateCategory));
+        updateBook.setCategory(category);
+        return bookRepository.save(updateBook);
 
     }
 
@@ -49,7 +53,12 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book updateBook(UpdateBookRequest updatedBook) {
         Book book = bookMapper.toBook(updatedBook);
+        Category updateCategory = book.getCategory();
+        Book updateBook = bookRepository.save(book);
         book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
+        updateCategory.setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
+        Category category = categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(updateCategory));
+        updateBook.setCategory(category);
         return bookRepository.save(book);
     }
 }
