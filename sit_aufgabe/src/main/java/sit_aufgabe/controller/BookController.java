@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/book")
 public class BookController {
     private final BookService bookService;
     @GetMapping("/all")
