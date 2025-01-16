@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sit_aufgabe.dto.AddBookRequest;
 import sit_aufgabe.dto.UpdateBookRequest;
 import sit_aufgabe.mapper.BookMapper;
+import sit_aufgabe.mapper.CategoryMapper;
 import sit_aufgabe.model.Book;
 import sit_aufgabe.repository.BookRepository;
 import sit_aufgabe.service.category.CategoryService;
@@ -18,6 +19,7 @@ public class BookServiceImpl implements BookService{
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<Book> getAllBooks() {
@@ -33,6 +35,7 @@ public class BookServiceImpl implements BookService{
     public Book addBook(AddBookRequest addBookRequest) {
         Book book = bookMapper.toBook(addBookRequest);
         book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
+        categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(book.getCategory()));
         return bookRepository.save(book);
 
     }
