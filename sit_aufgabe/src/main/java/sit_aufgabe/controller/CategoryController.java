@@ -12,7 +12,6 @@ import sit_aufgabe.model.Category;
 import sit_aufgabe.service.category.CategoryService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,12 +21,6 @@ public class CategoryController {
     @GetMapping("/all")
     public ResponseEntity<List<Category>> getAllBooks(){
         return ResponseEntity.ok(categoryService.getAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getBookById(@PathVariable Integer id){
-        Optional<Category> category = categoryService.getCategoryById(id);
-        return category.isPresent() ? ResponseEntity.ok(category.get()) : ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("isAuthenticated()")
