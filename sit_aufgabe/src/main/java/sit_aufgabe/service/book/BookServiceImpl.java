@@ -55,7 +55,11 @@ public class BookServiceImpl implements BookService{
         Book book = bookMapper.toBook(updatedBook);
         Category updateCategory = book.getCategory();
         Book updateBook = bookRepository.save(book);
-        book.getCategory().setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
+        for (Category c : categoryService.getAll()) {
+            c.setNumberOfBooks(categoryService.calculateCategoryCount(c.getId()));
+            categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(c));
+            }
+
         updateCategory.setNumberOfBooks(categoryService.calculateCategoryCount(book.getCategory().getId()));
         Category category = categoryService.updateCategory(categoryMapper.toUpdateCategoryRequest(updateCategory));
         updateBook.setCategory(category);
